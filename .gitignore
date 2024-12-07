@@ -1,2 +1,4 @@
 #ignore data files
 Data_2018-2023/*
+
+web_scraping/.env
