@@ -70,7 +70,7 @@ def fetch_research_papers(query, max_results=1000, results_per_request=25):
 
 # Query and Fetch Papers
 query = query = (
-    'PUBYEAR = 2017 AND ('
+    'PUBYEAR > 2017 AND PUBYEAR < 2024 AND ('
     'TITLE("engineering") OR TITLE("machine learning") OR TITLE("data science") OR '
     'TITLE("economic") OR TITLE("sustainability") OR TITLE("cryptocurrency")'
     'OR TITLE("financial markets") OR TITLE("digital transformation")' 
