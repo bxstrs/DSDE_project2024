@@ -2,7 +2,7 @@ import os
 import magic
 
 # Path to your folder
-source_folder = r'C:/Desktop Shortcut/workspace/university/dsde/DSDE_project2024/Data_2018-2023/Project/2023'
+source_folder = r'C:/desktop/workspace/university/dsde/DSDE_project2024/Data_2018-2023/Project/2023'
 
 # Initialize the magic detector
 file_magic = magic.Magic()
