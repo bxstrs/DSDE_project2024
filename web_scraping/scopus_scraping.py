@@ -14,9 +14,18 @@ HEADERS = {
     "Accept": "application/json"
 }
 
+# Load existing records to avoid duplicates
+existing_csv = r"C:/desktop/workspace/university/dsde/DSDE_project2024/json_data/information.csv"  # Path to the file with existing records
+if os.path.exists(existing_csv):
+    existing_records = pd.read_csv(existing_csv)
+    existing_dois = set(existing_records['DOI'].str.strip().str.lower())
+else:
+    existing_dois = set()
+
 # Function to fetch research papers
-def fetch_research_papers(query, max_results=1000, results_per_request=25):
+def fetch_research_papers(query, max_results=2500, results_per_request=25):
     all_papers = []
+    unique_dois = set(existing_dois)  # Track DOIs to avoid duplicates
     start = 0
 
     while len(all_papers) < max_results:
@@ -36,22 +45,25 @@ def fetch_research_papers(query, max_results=1000, results_per_request=25):
             data = response.json()
             entries = data.get("search-results", {}).get("entry", [])
 
-            # Extract relevant information
+            # Extract and filter unique papers
             for item in entries:
-                paper = {
-                    "Title": item.get("dc:title", ""),
-                    "Authors": item.get("dc:creator", ""),
-                    "Publication Name": item.get("prism:publicationName", ""),
-                    "Year": item.get("prism:coverDate", "").split("-")[0],
-                    "DOI": item.get("prism:doi", ""),
-                    "Citation Count": item.get("citedby-count", 0),
-                    "Keywords": item.get("authkeywords", ""),
-                    "Abstract": item.get("dc:description", ""),  # Abstract of the paper
-                    "Subject Areas": item.get("subj-area-abbrev", []),  # Abbreviated subject areas
-                    "Index Terms": item.get("idxterms", ""),  # Index terms
-                    "Link": item.get("link", [{}])[0].get("@href", "")  # Link to paper
-                }
-                all_papers.append(paper)
+                doi = item.get("prism:doi", "").strip().lower()  # Normalize DOI
+                if doi and doi not in unique_dois:  # Add only unique DOIs
+                    paper = {
+                        "Title": item.get("dc:title", ""),
+                        "Authors": item.get("dc:creator", ""),
+                        "Publication Name": item.get("prism:publicationName", ""),
+                        "Year": item.get("prism:coverDate", "").split("-")[0],
+                        "DOI": doi,
+                        "Citation Count": item.get("citedby-count", 0),
+                        "Keywords": item.get("authkeywords", ""),
+                        "Abstract": item.get("dc:description", ""),
+                        "Subject Areas": item.get("subj-area-abbrev", []),
+                        "Index Terms": item.get("idxterms", ""),
+                        "Link": item.get("link", [{}])[0].get("@href", "")
+                    }
+                    all_papers.append(paper)
+                    unique_dois.add(doi)  # Track new DOI
 
             # Update start index for next batch
             start += results_per_request
@@ -69,7 +81,7 @@ def fetch_research_papers(query, max_results=1000, results_per_request=25):
     return all_papers
 
 # Query and Fetch Papers
-query = query = (
+query = (
     'PUBYEAR > 2017 AND PUBYEAR < 2024 AND ('
     'TITLE("engineering") OR TITLE("machine learning") OR TITLE("data science") OR '
     'TITLE("economic") OR TITLE("sustainability") OR TITLE("cryptocurrency")'
@@ -83,9 +95,8 @@ query = query = (
 papers = fetch_research_papers(query, max_results=2500)
 
 # Save to CSV
+output_csv = r"C:/desktop/workspace/university/dsde/DSDE_project2024/web_scraping/scopus_trend_2018-2023.csv"
 df = pd.DataFrame(papers)
-df.to_csv(r"C:/desktop/workspace/university/dsde/DSDE_project2024/web_scraping/scopus_trend_2017.csv", index=False)
+df.to_csv(output_csv, index=False)
 
-print(f"Scraped {len(papers)} research papers. Data saved to 'scopus_research_papers.csv'.")
-
-
+print(f"Scraped {len(papers)} unique research papers. Data saved to '{output_csv}'.")
