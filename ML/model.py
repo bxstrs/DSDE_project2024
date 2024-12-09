@@ -1,6 +1,5 @@
 import pandas as pd
 from sklearn.cluster import KMeans
-import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
 import plotly.express as px
 
@@ -22,7 +21,13 @@ kmeans = KMeans(n_clusters=3, random_state=42)  # กำหนดจำนวน
 kmeans.fit(X_scaled)
 df['cluster'] = kmeans.labels_
 
-# Create an interactive scatter plot with Plotly
-fig = px.scatter(df, x='Year', y='Citation Count', color='cluster', 
-                 title='Cluster Visualization: Year vs Citation Count')
+fig = px.scatter(
+    df, 
+    x='Year', 
+    y='Citation Count', 
+    color='cluster', 
+    size='Citation Count',  # Optional: size of the points
+    hover_data=['Title'],  # Optional: display extra information on hover
+    title='Enhanced Cluster Visualization'
+)
 fig.show()
