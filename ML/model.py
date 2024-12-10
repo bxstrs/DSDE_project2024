@@ -4,8 +4,9 @@ import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
 import plotly.express as px
 
-data_2018 = "D:\DSDE\DSDE_project2024\json_data/information.csv"  # ข้อมูลปี 2018-2023
-data_2024 = "D:\DSDE\DSDE_project2024\web_scraping/scopus_trend_2024.csv"  # ข้อมูลปี 2024
+data_2018 = r"C:\vscode chula\dsde_pj\DSDE_project2024\json_data\information.csv"  # ข้อมูลปี 2018-2023
+data_2024 = r"C:\vscode chula\dsde_pj\DSDE_project2024\web_scraping\scopus_trend_2024.csv"  # ข้อมูลปี 2024
+
 df = pd.read_csv(data_2018)
 df_2024 = pd.read_csv(data_2024)
 df[['Abstract', 'Subject Areas']] = df[['Abstract', 'Subject Areas']].astype(str)
