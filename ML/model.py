@@ -40,3 +40,6 @@ fig = px.scatter(
 )
 
 st.plotly_chart(fig)
+
+st.subheader("Data Overview")
+st.dataframe(df[['Title', 'Year', 'Citation Count', 'cluster']])
