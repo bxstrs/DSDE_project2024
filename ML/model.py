@@ -2,6 +2,7 @@ import pandas as pd
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 import plotly.express as px
+import streamlit as st
 
 data_2018 = "C:/CEDT/Semester_3/2110403/DSDE_project2024/json_data/information.csv"  # ข้อมูลปี 2018-2023
 data_2024 = "C:/CEDT/Semester_3/2110403/DSDE_project2024/web_scraping/scopus_trend_2024.csv"  # ข้อมูลปี 2024
@@ -17,7 +18,14 @@ X = df[['Year', 'Citation Count']]
 scaler = StandardScaler()
 X_scaled = scaler.fit_transform(X)
 
-kmeans = KMeans(n_clusters=3, random_state=42)  # กำหนดจำนวนคลัสเตอร์เป็น 3
+#Streamlit
+
+st.title("Clustering Analysis of 2018-2024 Data")
+
+n_cluster = st.sidebar.slider("Number of Clustering", 2, 10, 3)
+
+
+kmeans = KMeans(n_clusters=n_cluster, random_state=42)
 kmeans.fit(X_scaled)
 df['cluster'] = kmeans.labels_
 
@@ -26,8 +34,9 @@ fig = px.scatter(
     x='Year', 
     y='Citation Count', 
     color='cluster', 
-    size='Citation Count',  # Optional: size of the points
-    hover_data=['Title'],  # Optional: display extra information on hover
+    size='Citation Count',
+    hover_data=['Title'],
     title='Enhanced Cluster Visualization'
 )
-fig.show()
+
+st.plotly_chart(fig)
