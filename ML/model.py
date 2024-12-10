@@ -8,6 +8,7 @@ data_2018 = "C:/CEDT/Semester_3/2110403/DSDE_project2024/json_data/information.c
 data_2024 = "C:/CEDT/Semester_3/2110403/DSDE_project2024/web_scraping/scopus_trend_2024.csv"  # ข้อมูลปี 2024
 df = pd.read_csv(data_2018)
 df_2024 = pd.read_csv(data_2024)
+tmp_df = df[['Abstract', 'Subject Areas']]
 df[['Abstract', 'Subject Areas']] = df[['Abstract', 'Subject Areas']].astype(str)
 df_2024[['Abstract', 'Subject Areas']] = df_2024[['Abstract', 'Subject Areas']].astype(str)
 df = pd.merge(df, df_2024, how='outer')
@@ -42,4 +43,20 @@ fig = px.scatter(
 st.plotly_chart(fig)
 
 st.subheader("Data Overview")
-st.dataframe(df[['Title', 'Year', 'Citation Count', 'cluster']])
+
+sort_column = st.selectbox("Sort by:", options=['Title', 'Year', 'Citation Count', 'cluster'])
+
+# Sort the DataFrame based on selected column
+sorted_df = (df[['Title', 'Year', 'Citation Count', 'cluster']]).sort_values(by=sort_column, ascending=True)
+st.dataframe(sorted_df)
+
+cluster_summary = df.groupby('cluster').agg({
+    'Year': ['mean'],
+    'Citation Count': ['mean'],
+    'Title': ['count']
+}).reset_index()
+
+cluster_summary.columns = ['Cluster', 'Average Year', 'Average Citation Count', 'Number of Papers']
+
+st.subheader("Cluster Summary Table")
+st.dataframe(cluster_summary)
