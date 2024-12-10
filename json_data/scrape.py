@@ -8,7 +8,7 @@ informations = []
 
 for year in year_list:
     #path of raw data
-    folder_path = f'C:/CEDT/Semester_3/2110403/project_data/{year}'
+    folder_path = f'D:\Project\Project/{year}'
     file_list = glob.glob(f'{folder_path}/*')
     file_list = [os.path.normpath(file_path) for file_path in file_list]
     for file_path in file_list:
@@ -39,7 +39,7 @@ for year in year_list:
 if informations:
     title = pd.DataFrame(informations)
     #path of exported file
-    output_path2 = 'C:/CEDT/Semester_3/2110403/project_data/information.csv'
+    output_path2 = 'D:\Project\Project/information.csv'
     title.to_csv(output_path2, index=False, encoding='utf-8')
     print(f'Information data successfully exported to {output_path2}')
 else:

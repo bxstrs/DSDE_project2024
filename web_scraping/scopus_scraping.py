@@ -95,7 +95,7 @@ query = (
 papers = fetch_research_papers(query, max_results=2500)
 
 # Save to CSV
-output_csv = r"C:/desktop/workspace/university/dsde/DSDE_project2024/web_scraping/scopus_trend_2018-2023.csv"
+output_csv = r"D:\DSDE\DSDE_project2024\web_scraping/scopus_trend_2018-2023.csv"
 df = pd.DataFrame(papers)
 df.to_csv(output_csv, index=False)
 
