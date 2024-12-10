@@ -22,8 +22,8 @@ X_scaled = scaler.fit_transform(X)
 
 st.title("Clustering Analysis of 2018-2024 Data")
 
+st.sidebar.title('Clustering Selector')
 n_cluster = st.sidebar.slider("Number of Clustering", 2, 10, 3)
-
 
 kmeans = KMeans(n_clusters=n_cluster, random_state=42)
 kmeans.fit(X_scaled)
